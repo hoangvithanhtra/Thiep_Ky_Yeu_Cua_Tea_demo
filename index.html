@@ -82,7 +82,7 @@ border-radius:12px;
 box-shadow:0 20px 70px rgba(0,0,0,0.25);
 cursor:pointer;
 z-index:2;
-top:55%;
+top:65%; /* Hạ thấp bao thư gốc xuống chút để có đà bay lên */
 }
 
 .envelope:before{
@@ -110,11 +110,11 @@ transform:translate(-50%,-50%);
 width:95px;
 }
 
-/* LETTER */
+/* LETTER (THIỆP) */
 .letter{
 position:absolute;
-width:96vw; /* 🔥 chỉnh to hơn */
-max-width:520px; /* 🔥 chỉnh to hơn */
+width:96vw; 
+max-width:520px; 
 background:url("paper.jpg");
 background-size:cover;
 background-position:center;
@@ -127,12 +127,12 @@ transform:translate(-50%,60px);
 opacity:0;
 transition:1.2s;
 box-shadow:0 30px 90px rgba(0,0,0,0.3);
-min-height:650px; /* 🔥 thêm chiều cao cho thoáng */
+min-height:650px; 
 overflow:hidden;
 }
 
 .open .letter{
-transform:translate(-50%,-300px); /* 🔥 giữ cân giữa */
+transform:translate(-50%,-450px); /* 🔥 Đã lùi lên cao hơn (từ -300px lên -450px) */
 opacity:1;
 }
 
@@ -268,25 +268,6 @@ font-size:17px;
 color:#b86b7c;
 }
 
-/* MOBILE */
-
-@media(max-width:480px){
-
-.bgText{
-font-size:120px;
-}
-
-.bgText2{
-font-size:60px;
-margin-top:-70px;
-}
-
-.envelope{
-margin-top:200px;
-}
-
-}
-
 /* PHOTOBOOTH */
 
 .photobooth{
@@ -296,10 +277,11 @@ left:50%;
 transform:translateX(-50%) rotate(0deg);
 opacity:0;
 transition:1.2s;
+z-index: 3;
 }
 
 .photobooth img{
-width:170px;
+width:160px; /* Hơi thu nhỏ tẹo để nhìn tinh tế hơn */
 display:block;
 border-left:10px solid white;
 border-right:10px solid white;
@@ -317,34 +299,23 @@ border-radius:0 0 12px 12px;
 }
 
 .open .photobooth{
-transform:translate(120%,-20px) rotate(8deg); /* 🔥 ảnh sang phải */
+/* 🔥 Đã lùi ra ngoài nhiều hơn (140%) và lùi lên cao (-80px) */
+transform:translate(140%,-80px) rotate(12deg); 
 opacity:1;
 }
 
-/* --- TÍNH NĂNG MỚI --- */
+/* MOBILE */
 
-@media (max-width: 768px) {
+@media(max-width:480px){
+    .bgText{ font-size:120px; }
+    .bgText2{ font-size:60px; margin-top:-70px; }
+    .envelope{ top:70%; }
+    
     .open .letter {
-        transform: translate(-50%, -310px) scale(0.85);
-        left: 50%;
+        transform: translate(-50%, -400px) scale(0.7); /* Lùi lên trên mobile */
     }
     .open .photobooth {
-        transform: translate(60%, -40px) rotate(8deg) scale(0.85);
-    }
-}
-
-@media (max-width: 480px) {
-    .open .letter {
-        transform: translate(-50%, -280px) scale(0.65);
-    }
-    .open .photobooth {
-        transform: translate(45%, -60px) rotate(8deg) scale(0.65);
-    }
-}
-
-@media (max-height: 700px) {
-    .open .letter, .open .photobooth {
-        margin-top: 50px;
+        transform: translate(50%, -100px) rotate(8deg) scale(0.7); /* Lùi ảnh sang phải mobile */
     }
 }
 
@@ -425,16 +396,17 @@ function openLetter(el){
 el.classList.toggle("open");
 
 let music=document.getElementById("bgMusic");
-music.volume=0;
-music.play();
-
-let fade=setInterval(()=>{
-if(music.volume<0.9){
-music.volume+=0.02;
-}else{
-clearInterval(fade);
+if (music.paused) {
+    music.volume=0;
+    music.play();
+    let fade=setInterval(()=>{
+        if(music.volume<0.9){
+            music.volume+=0.02;
+        }else{
+            clearInterval(fade);
+        }
+    },80);
 }
-},80);
 
 setTimeout(()=>{
 document.getElementById("nameText").classList.add("showName");
